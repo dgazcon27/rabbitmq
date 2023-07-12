@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    networks:
+      - rabbitmq
+  node:
+    image: node:20
+    build: 
+      dockerfile: DockerfileNode
+    networks:
+      - rabbitmq
+    ports: 
+      - '8080:3000'
+    working_dir: /app 
+    environment:
+      - RABBIT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBIT_PASSWORD=${RABBITMQ_DEFAULT_PASS}
+      - RABBIT_HOST=rabbit
+    depends_on:
+      rabbit:
+        condition: service_started
+
+volumes:
+  rabbitmq:
+
+networks:
+  rabbitmq:

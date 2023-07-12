@@ -1,0 +1,10 @@
+FROM node:20 as base
+
+WORKDIR /app
+
+FROM base as production 
+
+COPY app/*.js /app/
+COPY app/*.json /app
+
+RUN npm install 

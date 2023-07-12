@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  node:
+    image: node:20
+    build: 
+      target: production
+
+    command: index.js
+  
+
+    depends_on:
+      rabbit:
+        condition: service_started
+
